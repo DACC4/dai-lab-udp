@@ -56,6 +56,7 @@ public class Auditor {
 
     // Method to update musician activity (to be called when a sound is played)
     public void updateMusician(String uuid, String instrument) {
+        // Get 
         activeMusicians.put(uuid, new Musician(uuid, instrument, System.currentTimeMillis()));
     }
 }

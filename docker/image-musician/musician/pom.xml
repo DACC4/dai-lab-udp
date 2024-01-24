@@ -34,7 +34,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ch.heigvd.Main</mainClass>
+                            <mainClass>ch.heigvd.Musician</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -54,7 +54,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ch.heigvd.Main</mainClass>
+                            <mainClass>ch.heigvd.Musician</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

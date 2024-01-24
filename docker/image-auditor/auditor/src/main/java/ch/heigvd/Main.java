@@ -4,21 +4,27 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.net.MulticastSocket;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
 import java.net.DatagramPacket;
+import java.net.InetSocketAddress;
+import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static java.nio.charset.StandardCharsets.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class Main {
     final static String IPADDRESS = "239.255.22.5";
     final static int PORT = 9904;
-
+    final static Map<String, String> sounds = Map.of(
+            "ti-ta-ti", "piano",
+            "pouet", "trumpet",
+            "trulu", "flute",
+            "gzi-gzi", "violin",
+            "boum-boum", "drum"
+    );
     static Auditor auditor;
-
     static ExecutorService threadPool;
 
     public static void main(String[] args) {
@@ -35,7 +41,7 @@ class Main {
 
     private static void startReceiving() {
         try (MulticastSocket socket = new MulticastSocket(PORT)) {
-            InetSocketAddress group_address =  new InetSocketAddress(IPADDRESS, PORT);
+            InetSocketAddress group_address = new InetSocketAddress(IPADDRESS, PORT);
             NetworkInterface netif = NetworkInterface.getByName("eth0");
             socket.joinGroup(group_address, netif);
 
@@ -61,6 +67,6 @@ class Main {
         String uuid = payload.get("uuid").getAsString();
         String sound = payload.get("sound").getAsString();
 
-        auditor.updateMusician(uuid, sound);
+        auditor.updateMusician(uuid, sounds.get(sound));
     }
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -18,8 +20,7 @@ class Musician {
     public static void main(String[] args) {
         MusicianMessage musicianMessage = null;
         try {
-            //String instrument = args[0];
-            String instrument = "piano";
+            String instrument = args[0];
             musicianMessage = new MusicianMessage(instrument);
         } catch (Exception e) {
             System.out.println("Usage: docker run -d dai/musician <instrument>");
@@ -32,15 +33,27 @@ class Musician {
 
         byte[] payload = message.getBytes(UTF_8);
 
-        while (true) {
-            //TODO timer
-            try (DatagramSocket socket = new DatagramSocket()) {
-                InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
-                var packet = new DatagramPacket(payload, payload.length, dest_address);
-                socket.send(packet);
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+        // Send the payload every second
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendPayload(payload);
             }
+        }, 0, 1000);
+
+        while (true) {
+            // do nothing, just wait for the timer to send the payload every second
+        }
+    }
+
+    private static void sendPayload(byte[] payload) {
+        try (DatagramSocket socket = new DatagramSocket()) {
+            InetSocketAddress dest_address = new InetSocketAddress(IPADDRESS, PORT);
+            var packet = new DatagramPacket(payload, payload.length, dest_address);
+            socket.send(packet);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 }

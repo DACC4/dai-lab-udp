@@ -8,4 +8,4 @@ RUN apt-get update && apt-get install -y maven && mvn package
 FROM openjdk:21-slim
 WORKDIR /app
 COPY --from=0 /build/target/auditor-1.0-jar-with-dependencies.jar /app/app.jar
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
